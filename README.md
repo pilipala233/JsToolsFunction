@@ -1,0 +1,2 @@
+# JsToolsFunction
+项目中常用的前端javascript工具方法
