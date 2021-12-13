@@ -1,5 +1,12 @@
 var helper = function () {
-    // 深度克隆
+
+    /**
+     * @description: 深度克隆（一个很常见的递归克隆）
+     * @param {Object} obj 需要拷贝的对象
+     * @param {Object} parent 对象类型递归时的父对象，使用时不需要传
+     * @return {Object} 拷贝后的对象
+     * 
+     */
     this.deepClone = function deepClone(obj, parent = null) {
         let result; // 最后的返回结果
 
@@ -42,6 +49,8 @@ var helper = function () {
         }
         return result;
     };
+
+
     /**
      * @description: 日期格式化
      * @param {Date} t  Date实例
@@ -73,10 +82,13 @@ var helper = function () {
         });
     };
 
-    /** 
-     ** js浮点数加减法运算函数（可能存在值溢出）
-     **/
-
+    /**
+     * @description: js浮点数加减法运算函数（其实小数过长依然会存在值溢出）
+     * @param {Number} arg1 参数
+     * @param {Number} arg2 参数
+     * @return {Number} 返回数值类型结果
+     * 
+     */
     //加法
     this.accAdd = function (arg1, arg2) {
         var r1, r2, m, c;
@@ -124,7 +136,7 @@ var helper = function () {
         n = (r1 >= r2) ? r1 : r2;
         return ((arg1 * m - arg2 * m) / m).toFixed(n);
     };
-    //乘法（未测试）
+    //乘法
     this.accMul = function (arg1, arg2) {
         var m = 0,
             s1 = arg1.toString(),
@@ -138,7 +150,7 @@ var helper = function () {
         return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     }
 
-    //除法(未测试)
+    //除法
     this.accDiv = function (arg1, arg2) {
         var t1 = 0,
             t2 = 0,
@@ -156,7 +168,12 @@ var helper = function () {
         }
     }
 
-    //节流（在某个时间段内只响应一次）
+
+    /**
+     * @description: 节流（在某个时间段内只响应一次）
+     * @param {Function} fn 需要节流的方法
+     * 
+     */
     this.throttle = function (fn) {
         let timer = true;
         return function () {
@@ -171,7 +188,11 @@ var helper = function () {
         }
     }
 
-    //防抖（在某个时间段内点击会取消前面的点击事件）
+     /**
+     * @description: 防抖（在某个时间段内点击会取消前面的点击事件）
+     * @param {Function} fn 需要防抖的方法
+     * 
+     */   
     this.debounce = function (fn) {
         let timer = null;
         return function () {
@@ -182,24 +203,24 @@ var helper = function () {
             }, 1000);
         }
     }
-    //sleep函数
 
-    // 用法
-    // sleep(500).then(() => {
-    //     // 这里写sleep之后需要去做的事情
-    // })
+    /**
+     * @description: sleep函数
+     * @param {Number} time 睡眠时间毫秒
+     * 
+     */   
     this.sleep = function (time) {
         return new Promise((resolve) => setTimeout(resolve, time));
     }
 
 
-
-    //二进制转十进制
-
     /**
-     * 将二进制小数（包含整数部分和小数部分）转换为十进制数
-     * 二进制数（可能是整数，也可能是小数）
-     */
+     * @description: 将二进制小数（包含整数部分和小数部分）转换为十进制数
+     * @param {String} binaryNum 二进制数
+     * @return {Number} 返回数值类型结果
+     * 
+     */  
+
     this.binaryFloatToDecimal = function (binaryNum) {
         // 如果该二进制只有整数部分则直接用 parseInt(string, radix) 处理
         if (Number.isInteger(binaryNum)) {
@@ -224,17 +245,27 @@ var helper = function () {
             return decimalIntPartNum + deciamlFloatPartNum
         }
     }
-    //校验正则
-    this.regex = function (key, value) {
-        //password的校验不允许空格以及中文
-        //英文状态特殊字符共32个: ~`!@#$%^&*()_+-= {}[]\|;:"'<,>.?/ 需要转义共14个：{ } [ ] / \ + * . $ ^ | ? -
-        //中文状态32：·~！@#￥%…&*（）——-=+｛｝【】|、；‘’：“”，。、《》？需要转义2个：| -    
-        //手机验证摘抄自网络 https://blog.csdn.net/qaz5209103/article/details/105530079
-        //username验证不考虑空格
 
+
+    /**
+     * @description: 校验正则(需要再处理，有问题)
+     * @param {String} key 需要判断的类型['password','phone','username']
+     * @param {String} value 待校验的字符串
+     * @return {Boolean}  校验结果true 或者 false
+     * 
+     */     
+
+    this.regex = function (key, value) {
+        /**
+         * password的校验不允许空格以及中文（6-20位）
+         *    英文状态特殊字符共32个: ~`!@#$%^&*()_+-= {}[]\|;:"'<,>.?/ 需要转义共14个：{ } [ ] / \ + * . $ ^ | ? -
+         *    中文状态32：·~！@#￥%…&*（）——-=+｛｝【】|、；‘’：“”，。、《》？需要转义2个：| -    
+         * 手机验证摘抄自网络 https://blog.csdn.net/qaz5209103/article/details/105530079
+         * username 可中文，但是验证不考虑空格（6-20位）
+         */
         value = value.toString()
         let obj = {
-            password: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[`~!@#\$%\^&\*\(\)_\-\+=\{\[\}\]\|\\:;"'<,>\.\/\?·~！@#￥%…&*（）——\-=+｛｝【】\|、；‘’：“”，。、《》？])[A-Za-z\d`~!@#\$%\^&\*\(\)_\-\+=\{\[\}\]\|\\:;"'<,>\.\/\?·~！@#￥%…&*（）——\-=+｛｝【】\|、；‘’：“”，。、《》？]{6,20}$/g.test(value),
+            password: /^[A-Za-z\d`~!@#\$%\^&\*\(\)_\-\+=\{\[\}\]\|\\:;"'<,>\.\/\?·~！@#￥%…&*（）——\-=+｛｝【】\|、；‘’：“”，。、《》？]{6,20}$/g.test(value),
             phone: /^((\+|00)86)?((134\d{4})|((13[0-3|5-9]|14[1|5-9]|15[0-9]|16[2|5|6|7]|17[0-8]|18[0-9]|19[0-2|5-9])\d{8}))$/g.test(value),
             username: /^[A-Za-z\d`~!@#\$%\^&\*\(\)_\-\+=\{\[\}\]\|\\:;"'<,>\.\/\?\p{Unified_Ideograph}·~！@#￥%…&*（）——\-=+｛｝【】\|、；‘’：“”，。、《》？]{6,20}$/u.test(value)
         }
@@ -243,13 +274,29 @@ var helper = function () {
 
 
     }
-    //对象类型校验
+
+
+    /**
+     * @description: 对象类型校验
+     * @param {String} val 需要判断值
+     * @return {String}  返回Object.prototype.toString的处理值
+     * 
+     */   
+
     this.cheackType = function (val) {
         let temp = Object.prototype.toString.call(val).slice(8).split('')
         temp.pop()
         return temp.join('')
     }
-	//setTimeout模拟setinterval
+
+
+
+    /**
+     * @description: setTimeout模拟setinterval
+     * @param {Number} time 定时执行的时间毫秒数
+     * @param {Function}  cb 需要被执行的函数
+     * 
+     */   
     this.moni =(time,cb)=>{
 
         num=setTimeout(()=>{
@@ -262,8 +309,13 @@ var helper = function () {
 
         },time)
     }
-    //图片懒加载
-    //主页绑定document.addEventListener('scroll', imgLazyLoad())
+
+    /**
+     * @description: 图片懒加载
+     * @example document.addEventListener('scroll', imgLazyLoad())
+     * 
+     */
+
     this.imgLazyLoad = function () {
 
         let imgList = [...document.querySelectorAll('img')]
@@ -289,8 +341,16 @@ var helper = function () {
             imgList = imgList.filter((img, index) => !deleteIndexList.includes(index))
         }
     }
-    //url取参数
-    //参数是完整的url
+
+
+    
+    /**
+     * @description: url取参数
+     * @param {String} url 完整的url
+     * @return {Object}  参数值的对象
+     * 
+     */   
+
     this.parseParam = function(url){
         const paramsStr = /.+\?(.+)$/.exec(url)[1]; // 将 ? 后面的字符串取出来
         const paramsArr = paramsStr.split('&'); // 将字符串以 & 分割后存到数组中
@@ -320,4 +380,3 @@ var helper = function () {
 
 
 }
-let yoo = new helper()
