@@ -376,7 +376,57 @@ var helper = function () {
     
     }
 
+    
+    /**
+     * @description: 判读是否为数字
+     * @param {string} s
+     * @return {boolean}
+     */
+    const isNumber = function (s) {
+        const e = ["e", "E"];
+        s = s.trim();
 
+        let pointSeen = false;
+        let eSeen = false;
+        let numberSeen = false;
+        let numberAfterE = true;
+        for (let i = 0; i < s.length; i++) {
+            if ("0" <= s.charAt(i) && s.charAt(i) <= "9") {
+                numberSeen = true;
+                numberAfterE = true;
+            } else if (s.charAt(i) === ".") {
+                if (eSeen || pointSeen) {
+                    return false;
+                }
+                pointSeen = true;
+            } else if (e.includes(s.charAt(i))) {
+                if (eSeen || !numberSeen) {
+                    return false;
+                }
+                numberAfterE = false;
+                eSeen = true;
+            } else if (s.charAt(i) === "-" || s.charAt(i) === "+") {
+                if (i != 0 && !e.includes(s.charAt(i - 1))) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
 
+        return numberSeen && numberAfterE;
+    };
 
+    /**
+     * @description: 判读URL是否合法
+     * @param {string} s
+     * @return {boolean}
+     */
+    function isUrl(url) {
+        try {
+            new URL(url);
+            return true;
+        }catch(err){
+        return false;
+    }};
 }
